@@ -1,14 +1,15 @@
 plugins {
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android") version "2.50" apply false
 }
 
 android {
     namespace = "com.skycom.weatherapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.skycom.weatherapp"
@@ -50,15 +51,15 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.android)
 
-    // Hilt Core
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
-    // Hilt ViewModel Extension (Optional, for injecting into ViewModels)
-    implementation(libs.androidx.hilt.lifecycle.viewmodel)
-    kapt(libs.androidx.hilt.compiler)
 
-    // Hilt for Jetpack Compose (if needed)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+
+    kapt(libs.androidx.room.compiler)
+
     implementation(libs.androidx.hilt.navigation.compose)
 
 

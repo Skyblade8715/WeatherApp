@@ -11,20 +11,20 @@ import retrofit2.http.Query
 interface OpenWeatherApi {
 
     @GET("geo/1.0/direct")
-    fun getCityLocation(
+    suspend fun getCityLocation(
         @Query("q") cityName: String,
         @Query("limit") limit: Int = 5,
     ): Response<List<RawCityLocationResponse>>
 
     @GET("data/2.5/weather")
-    fun getCurrentWeather(
+    suspend fun getCurrentWeather(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
         @Query("units") units: String = "metric",
     ): Response<RawCurrentWeatherResponse>
 
     @GET("data/2.5/forecast")
-    fun getWeatherForecast(
+    suspend fun getWeatherForecast(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
         @Query("units") units: String = "metric",
