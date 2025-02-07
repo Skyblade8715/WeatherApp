@@ -1,5 +1,6 @@
 package com.skycom.weatherapp.core.network
 
+import com.skycom.weatherapp.core.common.model.ResultWrapper
 import com.skycom.weatherapp.core.network.model.RawCityLocationResponse
 import com.skycom.weatherapp.core.network.model.RawCurrentWeatherResponse
 import com.skycom.weatherapp.core.network.model.RawWeatherForecastResponse
@@ -29,4 +30,21 @@ interface OpenWeatherApi {
         @Query("lon") lon: Double,
         @Query("units") units: String = "metric",
     ): Response<RawWeatherForecastResponse>
+}
+
+suspend fun <T> makeApiCall(
+    apiCall: suspend () -> Response<T>
+): ResultWrapper<T> {
+    return try {
+        val response = apiCall()
+        if (response.isSuccessful) {
+            response.body()?.let {
+                ResultWrapper.Success(it)
+            } ?: ResultWrapper.Error("Empty response body", response.code())
+        } else {
+            ResultWrapper.Error("API error: ${response.message()}", response.code())
+        }
+    } catch (e: Exception) {
+        ResultWrapper.Error("Network error: ${e.localizedMessage}")
+    }
 }

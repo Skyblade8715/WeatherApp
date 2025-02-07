@@ -1,7 +1,7 @@
 package com.skycom.weatherapp.feature.weatherList.domain.repository
 
 import com.skycom.weatherapp.core.common.model.ResultWrapper
-import com.skycom.weatherapp.feature.weatherList.domain.model.CityLocation
+import com.skycom.weatherapp.core.common.model.CityLocation
 import com.skycom.weatherapp.feature.weatherList.domain.model.CityWeatherInfo
 
 interface WeatherListRepository {

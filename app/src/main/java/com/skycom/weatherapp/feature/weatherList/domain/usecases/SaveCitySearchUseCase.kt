@@ -1,6 +1,6 @@
 package com.skycom.weatherapp.feature.weatherList.domain.usecases
 
-import com.skycom.weatherapp.feature.weatherList.domain.model.CityLocation
+import com.skycom.weatherapp.core.common.model.CityLocation
 import com.skycom.weatherapp.feature.weatherList.domain.repository.WeatherListRepository
 import javax.inject.Inject
 

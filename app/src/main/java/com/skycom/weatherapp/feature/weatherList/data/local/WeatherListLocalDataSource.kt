@@ -1,6 +1,6 @@
 package com.skycom.weatherapp.feature.weatherList.data.local
 
-import com.skycom.weatherapp.feature.weatherList.domain.model.CityLocation
+import com.skycom.weatherapp.core.common.model.CityLocation
 import com.skycom.weatherapp.feature.weatherList.domain.repository.WeatherListLocalDataSource
 import javax.inject.Inject
 

@@ -3,7 +3,7 @@ package com.skycom.weatherapp.feature.weatherList.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skycom.weatherapp.core.common.model.ResultWrapper
-import com.skycom.weatherapp.feature.weatherList.domain.model.CityLocation
+import com.skycom.weatherapp.core.common.model.CityLocation
 import com.skycom.weatherapp.feature.weatherList.domain.usecases.GetRecentSearchesUseCase
 import com.skycom.weatherapp.feature.weatherList.domain.usecases.SaveCitySearchUseCase
 import com.skycom.weatherapp.feature.weatherList.domain.usecases.SearchCitiesWithWeatherUseCase
@@ -30,6 +30,7 @@ class WeatherListViewModel @Inject constructor(
     }
 
     fun searchCity(cityName: String) {
+        if(cityName.isBlank()) return
         viewModelScope.launch {
             _state.value = _state.value.copy(searchResults = ResultWrapper.Loading)
             val result = searchCitiesWithWeatherUseCase(cityName)

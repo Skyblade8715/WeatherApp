@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,19 +26,19 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.skycom.weatherapp.core.common.components.WeatherIcon
+import com.skycom.weatherapp.core.common.model.CityLocation
 import com.skycom.weatherapp.core.common.model.ResultWrapper
-import com.skycom.weatherapp.feature.weatherList.domain.model.CityLocation
+import com.skycom.weatherapp.core.common.util.annotateWithTemperatureColor
 import com.skycom.weatherapp.feature.weatherList.ui.model.CityWeatherDisplay
 import com.skycom.weatherapp.feature.weatherList.ui.model.WeatherListState
-import com.skycom.weatherapp.feature.weatherList.ui.model.getTemperatureColor
 
 @Composable
 fun WeatherListScreen(
-    navigateToDetails: (String) -> Unit
+    navigateToDetails: (CityLocation) -> Unit,
 ) {
 
     val viewModel: WeatherListViewModel = hiltViewModel()
-
     val state by viewModel.state.collectAsState()
 
     WeatherListScreenInternal(
@@ -52,7 +53,7 @@ fun WeatherListScreen(
 @Composable
 fun WeatherListScreenInternal(
     state: WeatherListState,
-    navigateToDetails: (String) -> Unit,
+    navigateToDetails: (CityLocation) -> Unit,
     searchCity: (String) -> Unit,
     saveCitySearch: (CityLocation) -> Unit,
 ) {
@@ -63,28 +64,30 @@ fun WeatherListScreenInternal(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TextField(value = searchQuery, onValueChange = {
-            searchQuery = it
-            searchCity(it.text)
-        }, modifier = Modifier.fillMaxWidth(), placeholder = { Text("Search for a city...") })
+        TextField(value = searchQuery,
+            onValueChange = {
+                searchQuery = it
+                searchCity(it.text)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("Search for a city...") })
         Spacer(modifier = Modifier.height(16.dp))
 
         when (state.searchResults) {
             is ResultWrapper.Loading -> CircularProgressIndicator()
-            is ResultWrapper.Success ->
-                if (state.searchResults.data.isNotEmpty()) {
-                    SearchResultsList(
-                        state.searchResults.data,
-                        navigateToDetails = navigateToDetails,
-                        saveCitySearch = saveCitySearch
-                    )
-                }
+            is ResultWrapper.Success -> if (state.searchResults.data.isNotEmpty()) {
+                SearchResultsList(
+                    state.searchResults.data,
+                    navigateToDetails = navigateToDetails,
+                    saveCitySearch = saveCitySearch
+                )
+            }
 
-            is ResultWrapper.Error -> Text(
+            is ResultWrapper.Error   -> Text(
                 text = state.searchResults.message ?: "Error loading recent searches"
             )
 
-            is ResultWrapper.Idle -> {}
+            is ResultWrapper.Idle    -> {}
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -101,11 +104,11 @@ fun WeatherListScreenInternal(
                 }
             }
 
-            is ResultWrapper.Error -> Text(
+            is ResultWrapper.Error   -> Text(
                 text = state.recentSearches.message ?: "Error loading recent searches"
             )
 
-            is ResultWrapper.Idle -> {}
+            is ResultWrapper.Idle    -> {}
         }
 
 
@@ -116,13 +119,16 @@ fun WeatherListScreenInternal(
 @Composable
 fun RecentSearchesList(
     cities: List<CityWeatherDisplay>,
-    navigateToDetails: (String) -> Unit,
+    navigateToDetails: (CityLocation) -> Unit,
     saveCitySearch: (CityLocation) -> Unit,
 ) {
-    Text(text = "Recent Searches", style = MaterialTheme.typography.headlineMedium)
+    Text(
+        text = "Recent Searches",
+        style = MaterialTheme.typography.headlineMedium
+    )
     LazyColumn {
         items(cities) { city ->
-            CityRow(
+            CityWeatherItem(
                 city = city,
                 navigateToDetails = navigateToDetails,
                 saveCitySearch = saveCitySearch,
@@ -134,13 +140,16 @@ fun RecentSearchesList(
 @Composable
 fun SearchResultsList(
     cities: List<CityWeatherDisplay>,
-    navigateToDetails: (String) -> Unit,
+    navigateToDetails: (CityLocation) -> Unit,
     saveCitySearch: (CityLocation) -> Unit,
 ) {
-    Text(text = "Search Results", style = MaterialTheme.typography.headlineMedium)
+    Text(
+        text = "Search Results",
+        style = MaterialTheme.typography.headlineMedium
+    )
     LazyColumn {
         items(cities) { city ->
-            CityRow(
+            CityWeatherItem(
                 city = city,
                 navigateToDetails = navigateToDetails,
                 saveCitySearch = saveCitySearch,
@@ -150,39 +159,54 @@ fun SearchResultsList(
 }
 
 @Composable
-fun CityRow(
+fun CityWeatherItem(
     city: CityWeatherDisplay,
-    navigateToDetails: (String) -> Unit,
-    saveCitySearch: (CityLocation) -> Unit
+    navigateToDetails: (CityLocation) -> Unit,
+    saveCitySearch: (CityLocation) -> Unit,
 ) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .clickable {
-            saveCitySearch(
-                CityLocation(
-                    city.location.name,
-                    city.location.country,
-                    city.location.latitude,
-                    city.location.longitude,
+    Card(
+        shape = MaterialTheme.shapes.extraLarge,
+        modifier = Modifier.padding(vertical = 4.dp)
+    ) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                saveCitySearch(
+                    CityLocation(
+                        city.location.name,
+                        city.location.country,
+                        city.location.latitude,
+                        city.location.longitude,
+                    )
                 )
+                navigateToDetails(city.location)
+            }
+            .padding(8.dp),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+            WeatherIcon(
+                modifier = Modifier.padding(
+                        start = 8.dp,
+                        end = 16.dp
+                    ),
+                iconCode = city.weatherIcon
             )
-            navigateToDetails(city.location.name)
-        }
-        .padding(8.dp)) {
-        Column(modifier = Modifier.weight(1f)) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "${city.location.name}, ${city.location.country}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = city.weatherDescription,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
             Text(
-                text = "${city.location.name}, ${city.location.country}",
-                style = MaterialTheme.typography.bodyMedium
+                modifier = Modifier.padding(end = 8.dp),
+                text = city.temperature.annotateWithTemperatureColor(),
             )
-            Text(text = city.weatherDescription, style = MaterialTheme.typography.bodyMedium)
         }
-        Text(
-            text = city.temperatureDisplay,
-            color = city.temperatureColor,
-        )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -198,10 +222,9 @@ fun WeatherListScreenPreview() {
                             latitude = 0.0,
                             longitude = 0.0,
                         ),
-                        temperatureDisplay = "10°C",
+                        temperature = 25.0,
                         weatherDescription = "Sunny",
-                        weatherIcon = "",
-                        temperatureColor = getTemperatureColor(10),
+                        weatherIcon = "20d",
                     ),
                     CityWeatherDisplay(
                         CityLocation(
@@ -210,10 +233,9 @@ fun WeatherListScreenPreview() {
                             latitude = 0.0,
                             longitude = 0.0,
                         ),
-                        temperatureDisplay = "14°C",
+                        temperature = 2.4,
                         weatherDescription = "Cloudy",
-                        weatherIcon = "",
-                        temperatureColor = getTemperatureColor(14),
+                        weatherIcon = "10d",
                     )
                 ),
             ),
@@ -226,10 +248,9 @@ fun WeatherListScreenPreview() {
                             latitude = 0.0,
                             longitude = 0.0,
                         ),
-                        temperatureDisplay = "12°C",
+                        temperature = 12.0,
                         weatherDescription = "Rainy",
                         weatherIcon = "",
-                        temperatureColor = getTemperatureColor(12),
                     )
                 )
             ),

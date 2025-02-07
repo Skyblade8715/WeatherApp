@@ -1,10 +1,9 @@
 package com.skycom.weatherapp.feature.weatherList.domain.usecases
 
+import com.skycom.weatherapp.core.common.model.CityLocation
 import com.skycom.weatherapp.core.common.model.ResultWrapper
-import com.skycom.weatherapp.feature.weatherList.domain.model.CityLocation
 import com.skycom.weatherapp.feature.weatherList.domain.repository.WeatherListRepository
 import com.skycom.weatherapp.feature.weatherList.ui.model.CityWeatherDisplay
-import com.skycom.weatherapp.feature.weatherList.ui.model.getTemperatureColor
 import javax.inject.Inject
 
 class SearchCitiesWithWeatherUseCase @Inject constructor(
@@ -26,10 +25,9 @@ class SearchCitiesWithWeatherUseCase @Inject constructor(
                         latitude = city.latitude,
                         longitude = city.longitude,
                     ),
-                    temperatureDisplay = "${weather.temperature.toInt()}°C",
+                    temperature = weather.temperature,
                     weatherDescription = weather.weatherDescription,
                     weatherIcon = weather.weatherIcon,
-                    temperatureColor = getTemperatureColor(weather.temperature.toInt())
                 )
             } else null
         }
