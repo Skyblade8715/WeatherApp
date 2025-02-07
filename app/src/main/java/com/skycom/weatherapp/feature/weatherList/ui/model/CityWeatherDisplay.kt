@@ -1,20 +1,11 @@
 package com.skycom.weatherapp.feature.weatherList.ui.model
 
-import androidx.compose.ui.graphics.Color
-import com.skycom.weatherapp.feature.weatherList.domain.model.CityLocation
+import com.skycom.weatherapp.core.common.model.CityLocation
 
 data class CityWeatherDisplay(
     val location: CityLocation,
-    val temperatureDisplay: String,
+    val temperature: Double,
     val weatherDescription: String,
     val weatherIcon: String,
-    val temperatureColor: Color,
 )
 
-fun getTemperatureColor(temp: Int): Color {
-    return when {
-        temp < 10 -> Color.Blue
-        temp in 10..20 -> Color.Black
-        else -> Color.Red
-    }
-}

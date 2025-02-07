@@ -1,7 +1,7 @@
 package com.skycom.weatherapp.feature.weatherList.data.repository
 
 import com.skycom.weatherapp.core.common.model.ResultWrapper
-import com.skycom.weatherapp.feature.weatherList.domain.model.CityLocation
+import com.skycom.weatherapp.core.common.model.CityLocation
 import com.skycom.weatherapp.feature.weatherList.domain.model.CityWeatherInfo
 import com.skycom.weatherapp.feature.weatherList.domain.repository.WeatherListLocalDataSource
 import com.skycom.weatherapp.feature.weatherList.domain.repository.WeatherListRemoteDataSource
@@ -37,7 +37,7 @@ class DefaultWeatherListRepository @Inject constructor(
                 CityWeatherInfo(
                     name = city.name,
                     country = city.country,
-                    temperature = weather.main.temperature,
+                    temperature = weather.main.temp,
                     weatherDescription = weather.weather.firstOrNull()?.description
                         ?: "Unknown",
                     weatherIcon = weather.weather.firstOrNull()?.icon ?: ""

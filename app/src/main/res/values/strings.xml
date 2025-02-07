@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Weather App</string>
+    <string name="weather_icon_link">https://openweathermap.org/img/wn/%1$s@2x.png</string>
+    <string name="degrees_celcius">%1$s°C</string>
+    <string name="temperature">Temperature:</string>
+    <string name="perceived_temperature">Perceived Temperature:</string>
+    <string name="wind_speed_m_s">Wind Speed: %1$s m/s</string>
+    <string name="pressure_hpa">Pressure: %1$s hPa</string>
+    <string name="visibility_m">Visibility: %1$s m</string>
+    <string name="snow_intensity_mm_h">Snow Intensity: %1$s mm/h</string>
+    <string name="rain_intensity_mm_h">Rain Intensity: %1$s mm/h</string>
+    <string name="sunset">Sunset: %1$s</string>
+    <string name="sunrise">Sunrise: %1$s</string>
+    <string name="error_has_occurred">Error has occurred</string>
+    <string name="min_max_temp">Min: %1$s°C / Max: %2$s°C</string>
+    <string name="humidity">Humidity: %1$s</string>
+    <string name="precipitation">Precipitation: %1$s</string>
 </resources>

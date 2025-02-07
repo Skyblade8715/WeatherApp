@@ -1,4 +1,4 @@
-package com.skycom.weatherapp.feature.weatherList.domain.model
+package com.skycom.weatherapp.core.common.model
 
 data class CityLocation(
     val name: String,
